@@ -45,5 +45,12 @@ output=$(yarn wrangler pages deploy "$STATICS_DIRECTORY" --project-name "$REPOSI
 output="${output//$'\n'/ }"
 # Extracting URL from output only
 url=$(echo "$output" | grep -o 'https://[^ ]*' | sed 's/ //g')
+
+# debug
+echo "===output==="
+echo $output
+echo "===url==="
+echo $url
+
 echo "DEPLOYMENT_OUTPUT=$output" >> "$GITHUB_ENV"
 echo "DEPLOYMENT_URL=$url" >> "$GITHUB_ENV"
