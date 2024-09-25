@@ -5,6 +5,8 @@ const ERROR_READING_FILE = "Error reading file:";
 // @DEV: these credentials are all disposable and tightly scoped
 // for the purposes of assisting pull request reviewers
 // and posting continuous deployment links
+// they lead to `auth` directory, a sibling of `src` directory here.
+// <root>/auth
 
 import path from "path";
 

@@ -1,6 +1,6 @@
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
-import { deploysBot } from "./deploys-bot";
+import { ubiquityOsDeployer } from "./deploys-bot";
 import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -25,7 +25,7 @@ export function handlePullRequest(owner: string, repo: string, pull_request_numb
       issue_number: Number(pull_request_number),
     })
     .then(({ data }) => {
-      const botComment = data.find((comment) => comment.user?.id === deploysBot.id);
+      const botComment = data.find((comment) => comment.user?.id === ubiquityOsDeployer.id);
       if (botComment) {
         // If bot comment exists, update it
         return octokit.issues.updateComment({

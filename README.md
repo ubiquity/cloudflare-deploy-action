@@ -16,7 +16,6 @@ A Github action to automate the deployment of static or full-stack app to Cloudf
       yarn.lock
 ```
 
-
 ## How to use the action in a workflow
 
 ```yml
@@ -41,10 +40,10 @@ jobs:
           statics_directory: "static"
 ```
 
-
 ## Artifact for static-only apps
-This method is not recommended. All new static-only and full-stack apps should use artifact directory structure given above. The old apps should also transition to the new directory structure of the artifact. 
-For backward compatibility, the action also works for static-only project with following artifact. 
+
+This method is not recommended. All new static-only and full-stack apps should use artifact directory structure given above. The old apps should also transition to the new directory structure of the artifact.
+For backward compatibility, the action also works for static-only project with following artifact.
 
 ```yml
 - name: Upload build artifact
@@ -76,5 +75,3 @@ jobs:
           commit_sha: ${{ github.event.workflow_run.head_sha }}
           workflow_run_id: ${{ github.event.workflow_run.id }}
 ```
-
-
