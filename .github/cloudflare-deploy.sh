@@ -44,13 +44,6 @@ yarn add wrangler --ignore-scripts
 output=$(yarn wrangler pages deploy "$STATICS_DIRECTORY" --project-name "$REPOSITORY_NAME" --branch "$CURRENT_BRANCH" --commit-dirty=true)
 output="${output//$'\n'/ }"
 # Extracting URL from output only
-url=$(echo "$output" | grep -o 'https://[^ ]*' | sed 's/ //g')
-
-# debug
-echo "===output==="
-echo $output
-echo "===url==="
-echo $url
-
+url=$(echo "$output" | grep -o 'https://[^ ]*' | sed 's/ //g' | head -n 1)
 echo "DEPLOYMENT_OUTPUT=$output" >> "$GITHUB_ENV"
 echo "DEPLOYMENT_URL=$url" >> "$GITHUB_ENV"
