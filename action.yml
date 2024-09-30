@@ -35,7 +35,7 @@ inputs:
   app_id:
     description: "GitHub App ID"
     required: false
-  private_key:
+  app_private_key:
     description: "GitHub App Private Key"
     required: false
 
