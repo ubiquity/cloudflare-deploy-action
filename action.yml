@@ -1,4 +1,3 @@
-# ubiquity/cloudflare-deploy-action/main/action.yml
 name: "Continuous Deployment to Cloudflare Pages"
 description: "Deploy to Cloudflare Pages"
 
