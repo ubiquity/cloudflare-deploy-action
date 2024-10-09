@@ -42,6 +42,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.10.0
+  
     - name: Get GitHub App token
       if: inputs.app_id != '' && inputs.private_key != '' # Only attempt to authenticate if `app_id` and `private_key` are provided
       uses: tibdex/github-app-token@v1.7.0
@@ -84,11 +89,6 @@ runs:
       env:
         CLOUDFLARE_ACCOUNT_ID: ${{ inputs.cloudflare_account_id }}
         CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare_api_token }}
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.10.0
 
     - name: Post Deployment on Pull Request or Commit
       shell: bash
