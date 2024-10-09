@@ -15,9 +15,9 @@ echo "Checking if project exists..."
 # Specifically scoped for public contributors to automatically deploy to our team Cloudflare account
 
 # Fetch the list of projects and check if the specific project exists
-project_exists=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects" \
+project_exists=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$REPOSITORY_NAME" \
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
-  -H "Content-Type: application/json" | jq -r ".result[] | select(.name == \"$REPOSITORY_NAME\") | .name")
+  -H "Content-Type: application/json" | jq -r ".result.name")
 
 if [ "$project_exists" == "$REPOSITORY_NAME" ]; then
   echo "Project already exists. Skipping creation..."
