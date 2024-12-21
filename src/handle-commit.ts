@@ -28,15 +28,16 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
       const botComment = data.find((comment) => comment.user?.id === ubiquityOsDeployer.id);
       if (botComment) {
         // If bot comment exists, update it
-        if (!botComment.body.includes(body)) {
+        const existingUrls = botComment.body.match(/https?:\/\/[^\s]+/g) || [];
+
+        if (!existingUrls.includes(deploymentLink)) {
           return octokit.repos.updateCommitComment({
             owner,
             repo,
             comment_id: botComment.id,
             body: botComment.body + "\n" + body,
           });
-        }
-      } else {
+        } else {
         // If bot comment does not exist, create a new one
         return octokit.repos.createCommitComment({
           owner,
