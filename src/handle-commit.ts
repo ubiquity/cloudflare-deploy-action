@@ -1,7 +1,9 @@
-import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
+import { createAppAuth } from "@octokit/auth-app";
 import { ubiquityOsDeployer } from "./deploys-bot";
 import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
+import { checkForDuplicateLinks } from "../utils/check-for-duplicated-links";
+import { extractUrlsFromHtml } from "../utils/extract-urls-from-html";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function handleCommit(owner: string, repo: string, commit_sha: string, deploymentLink: string) {
@@ -28,16 +30,17 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
       const botComment = data.find((comment) => comment.user?.id === ubiquityOsDeployer.id);
       if (botComment) {
         // If bot comment exists, update it
-        const existingUrls = botComment.body.match(/https?:\/\/[^\s]+/g) || [];
+        const existingUrls = extractUrlsFromHtml(body);
 
-        if (!existingUrls.includes(deploymentLink)) {
+        if (!checkForDuplicateLinks(existingUrls, deploymentLink)) {
           return octokit.repos.updateCommitComment({
             owner,
             repo,
             comment_id: botComment.id,
             body: botComment.body + "\n" + body,
           });
-        } else {
+        }
+      } else {
         // If bot comment does not exist, create a new one
         return octokit.repos.createCommitComment({
           owner,
