@@ -2,7 +2,6 @@ import { Octokit } from "@octokit/rest";
 import { createAppAuth } from "@octokit/auth-app";
 import { ubiquityOsDeployer } from "./deploys-bot";
 import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
-import { checkForDuplicateLinks } from "../utils/check-for-duplicated-links";
 import { extractUrlsFromHtml } from "../utils/extract-urls-from-html";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -32,7 +31,7 @@ export function handleCommit(owner: string, repo: string, commit_sha: string, de
         // If bot comment exists, update it
         const existingUrls = extractUrlsFromHtml(body);
 
-        if (!checkForDuplicateLinks(existingUrls, deploymentLink)) {
+        if (!existingUrls.includes(deploymentLink)) {
           return octokit.repos.updateCommitComment({
             owner,
             repo,

@@ -1,87 +1,8 @@
-import { checkForDuplicateLinks } from "../utils/check-for-duplicated-links";
 import { extractUrlsFromHtml } from "../utils/extract-urls-from-html";
 
 const LINK_1 = "https://link1.com";
 const LINK_2 = "https://link2.com";
 const LINK_3 = "https://link3.com";
-
-const HTML_LINK_1 = `<div><a href="${LINK_1}"><code>abcdef1</code></a></div>`;
-const HTML_LINK_2 = `<div><a href="${LINK_2}"><code>abcdef2</code></a></div>`;
-const HTML_LINK_3 = `<div><a href="${LINK_1}"><code>abcdef3</code></a></div>`;
-
-describe("checkForDuplicateLinks", () => {
-  it("should return true if the deployment link already exists", () => {
-    const existingLinks = [HTML_LINK_1, HTML_LINK_2, HTML_LINK_3];
-    const deploymentLink = LINK_1;
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(true);
-  });
-
-  it("should return false if the deployment link does not exist", () => {
-    const existingLinks = [HTML_LINK_1, HTML_LINK_2];
-    const deploymentLink = LINK_3;
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(false);
-  });
-
-  it("should return false if deployment link is empty", () => {
-    const existingLinks = [HTML_LINK_1, HTML_LINK_2];
-    const deploymentLink = "";
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(false);
-  });
-
-  it("should return true if deployment link exists, even with extra whitespace", () => {
-    const existingLinks = [HTML_LINK_1, `<div><a href=" ${LINK_1} "><code>abcdef2</code></a></div>`];
-    const deploymentLink = LINK_1;
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(true);
-  });
-
-  it("should return false if no matching link is found but URLs have different cases", () => {
-    const existingLinks = [HTML_LINK_1, HTML_LINK_2];
-    const deploymentLink = "https://LINK1.com";
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(false);
-  });
-
-  it("should return true if multiple instances of the same link exist", () => {
-    const existingLinks = [HTML_LINK_1, `<div><a href="${LINK_1}"><code>abcdef2</code></a></div>`, `<div><a href="${LINK_1}"><code>abcdef3</code></a></div>`];
-    const deploymentLink = LINK_1;
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(true);
-  });
-
-  it("should return false if the deployment link contains invalid URL format", () => {
-    const existingLinks = [HTML_LINK_1, HTML_LINK_2];
-    const deploymentLink = "ht://invalidlink.com";
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(false);
-  });
-
-  it("should return false if deployment link has no scheme", () => {
-    const existingLinks = [HTML_LINK_1, HTML_LINK_2];
-    const deploymentLink = "link3.com";
-
-    const existingUrls = existingLinks.map((link) => extractUrlsFromHtml(link)).flat();
-
-    expect(checkForDuplicateLinks(existingUrls, deploymentLink)).toBe(false);
-  });
-});
 
 describe("extractUrlsFromHtml", () => {
   it("should extract a single URL from a simple anchor tag", () => {
