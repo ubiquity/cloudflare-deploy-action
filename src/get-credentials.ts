@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { readFileSync, readdirSync } from "fs";
+import { readFile, readdir } from "fs/promises";
 const ERROR_READING_FILE = "Error reading file:";
 
 // @DEV: these credentials are all disposable and tightly scoped
@@ -12,9 +12,9 @@ import path from "path";
 
 const AUTH_DIR = "/home/runner/work/_actions/ubiquity/cloudflare-deploy-action/main/auth/";
 
-export function getAppId() {
+export async function getAppId() {
   try {
-    const data = readFileSync(path.join(AUTH_DIR, "app-id"), "utf8");
+    const data = await readFile(path.join(AUTH_DIR, "app-id"), "utf8");
     const trimmed = data.trim();
     return Number(trimmed);
   } catch (err) {
@@ -23,9 +23,9 @@ export function getAppId() {
   }
 }
 
-export function getInstallationId() {
+export async function getInstallationId() {
   try {
-    const data = readFileSync(path.join(AUTH_DIR, "installation-id"), "utf8");
+    const data = await readFile(path.join(AUTH_DIR, "installation-id"), "utf8");
     return data.trim();
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -33,11 +33,11 @@ export function getInstallationId() {
   }
 }
 
-export function getPrivateKey() {
+export async function getPrivateKey() {
   try {
-    const files = readdirSync(path.join(AUTH_DIR, "../auth"));
+    const files = await readdir(path.join(AUTH_DIR, "../auth"));
     const pemFile = files.find((file) => file.endsWith(".pem"));
-    const data = pemFile ? readFileSync(path.join(AUTH_DIR, `${pemFile}`), "utf8") : null;
+    const data = pemFile ? await readFile(path.join(AUTH_DIR, `${pemFile}`), "utf8") : null;
     return data ? data.trim() : null;
   } catch (err) {
     console.error(ERROR_READING_FILE, err);
@@ -52,5 +52,14 @@ export function printFileStructure(location: string) {
     console.log(`File structure:\n${stdout}`);
   } catch (error) {
     console.error(`exec error: ${error}`);
+  }
+}
+
+export async function getAuth() {
+  const [appId, installationId, privateKey] = await Promise.all([getAppId(), getInstallationId(), getPrivateKey()])
+  return {
+    appId,
+    installationId,
+    privateKey
   }
 }

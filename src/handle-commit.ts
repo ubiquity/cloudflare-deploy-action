@@ -1,17 +1,13 @@
 import { createAppAuth } from "@octokit/auth-app";
 import { Octokit } from "@octokit/rest";
 import { ubiquityOsDeployer } from "./deploys-bot";
-import { getAppId, getInstallationId, getPrivateKey } from "./get-credentials";
+import { getAuth } from "./get-credentials";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function handleCommit(owner: string, repo: string, commit_sha: string, deploymentLink: string) {
+export async function handleCommit(owner: string, repo: string, commit_sha: string, deploymentLink: string) {
   const octokit = new Octokit({
     authStrategy: createAppAuth,
-    auth: {
-      appId: getAppId(),
-      privateKey: getPrivateKey(),
-      installationId: getInstallationId(),
-    },
+    auth: await getAuth(),
   });
 
   const slicedSha = commit_sha.slice(0, 7);
