@@ -49,7 +49,7 @@ runs:
 
     - name: Get GitHub App token
       if: inputs.app_id != '' && inputs.app_private_key != '' # Only attempt to authenticate if `app_id` and `app_private_key` are provided
-      uses: actions/create-github-app-token@v1
+      uses: actions/create-github-app-token@v2
       id: get_installation_token
       with:
         app-id: ${{ inputs.app_id }}
