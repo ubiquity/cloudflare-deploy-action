@@ -49,11 +49,11 @@ runs:
 
     - name: Get GitHub App token
       if: inputs.app_id != '' && inputs.app_private_key != '' # Only attempt to authenticate if `app_id` and `app_private_key` are provided
-      uses: tibdex/github-app-token@v1.7.0
+      uses: actions/create-github-app-token@v1
       id: get_installation_token
       with:
-        app_id: ${{ inputs.app_id }}
-        private_key: ${{ inputs.app_private_key }}
+        app-id: ${{ inputs.app_id }}
+        private-key: ${{ inputs.app_private_key }}
 
     - name: Find associated pull request
       id: pr
@@ -77,11 +77,11 @@ runs:
           return {forcePreviewDeploy: forcePreviewDeploy, pullRequestNumber: pullRequestNumber }
 
     - name: Download build artifact
-      uses: dawidd6/action-download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ inputs.build_artifact_name }}
         path: ${{ inputs.output_directory }}
-        run_id: ${{ inputs.workflow_run_id }}
+        run-id: ${{ inputs.workflow_run_id }}
 
     - name: Deploy to Cloudflare
       run: bash ../../_actions/ubiquity/cloudflare-deploy-action/main/.github/cloudflare-deploy.sh "${{ inputs.repository }}" "${{ inputs.production_branch }}" "${{ inputs.output_directory }}" "${{ fromJSON(steps.pr.outputs.result).forcePreviewDeploy && format('{0}/{1}', github.repository_owner, inputs.current_branch) || inputs.current_branch }}" "${{ inputs.statics_directory }}"
